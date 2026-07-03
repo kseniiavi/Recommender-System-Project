@@ -1,4 +1,15 @@
 # Recommender-System-Project
-This tool uses content-based filtering and cosine similarity to recommend medical specialists based on your symptoms. This tool is for educational purposes only. Always consult a qualified medical professional for medical advice.
+Method: Content-Based Filtering with Cosine Similarity
+Reference: Castells & Jannach (2023) — "Recommender Systems: A Primer" (Paper 7)
 
-In this work, content-based filtering was used. Each disease is an "item" described by its symptom features. A user's input (their symptoms) becomes a query vector. You compute similarity between the query and each disease's symptom profile (cosine similarity), rank the diseases, then look up the winner's speciality in Doctor_Versus_Disease.csv. Symptom weights from Symptom_Weights.csv become the feature importance values. That's the basic workflow.
+How it works:
+  1. Each disease is represented as a weighted feature vector over 131 symptoms.
+  2. The user's input symptoms are encoded as a query vector in the same space.
+  3. Cosine similarity measures the angle between the query and each disease vector.
+     similarity = (A · B) / (||A|| × ||B||)
+     - 1.0 = identical symptom profile
+     - 0.0 = no overlap at all
+  4. The top-ranked disease(s) determine the recommended specialty.
+
+
+This tool is for educational purposes only. Always consult a qualified medical professional for medical advice.
