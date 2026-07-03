@@ -1,14 +1,12 @@
 """
-setup_and_test.py
-─────────────────
-Run this ONCE after downloading the new files.
+Run ONCE after downloading the new files.
 It installs dependencies, runs preprocessing, and tests the resolver
 so you can confirm everything works before launching the app.
 """
 
 import subprocess, sys
 
-# ── 1. Install new dependencies ───────────────────────────────────────────────
+#  1. Install new dependencies 
 print("Installing dependencies...")
 subprocess.check_call([sys.executable, "-m", "pip", "install",
                        "rapidfuzz", "prompt_toolkit", "streamlit", "--quiet"])
@@ -16,12 +14,12 @@ print("  ✓ rapidfuzz installed")
 print("  ✓ prompt_toolkit installed")
 print("  ✓ streamlit installed")
 
-# ── 2. Run preprocessing (builds disease_profiles.csv etc.) ──────────────────
+#  2. Run preprocessing (builds disease_profiles.csv etc.) 
 print("\nRunning preprocessing...")
 import importlib, step3_preprocess   # runs on import
 print("  ✓ disease_profiles.csv ready")
 
-# ── 3. Test the resolver ──────────────────────────────────────────────────────
+#  3. Test the resolver 
 print("\nTesting resolver...")
 from resolver import resolve_symptom, resolve_all
 
@@ -48,7 +46,7 @@ for raw, expected, exp_method in tests:
     print(f"  {ok}  '{raw:<25}' → {str(symptom):<35} [{method}]"
           + (f"  ← expected {expected}" if symptom != expected else ""))
 
-# ── 4. Test the full pipeline ─────────────────────────────────────────────────
+#  4. Test the full pipeline 
 print("\nTesting full pipeline with natural language input...")
 from step4_recommender import recommend
 

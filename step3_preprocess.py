@@ -20,7 +20,7 @@ dv["Specialty"] = dv["Specialty"].str.strip()
 sw["Symptom"]   = sw["Symptom"].str.strip()
 
 # 3. Fix known data errors in Doctor_Versus_Disease 
-# "Tuberculosis" was mapped to itself (not a specialty) — fix it
+# "Tuberculosis" was mapped to itself (not a specialty)
 dv.loc[dv["Disease"] == "Tuberculosis", "Specialty"] = "Pulmonologist"
 
 # Capitalise inconsistency: "hepatologist" → "Hepatologist"
@@ -31,7 +31,7 @@ print(dv.to_string(index=False))
 
 # 4. Build the symptom weight lookup  {symptom_name: weight}
 # Note: weights in this dataset are just sequential IDs (1–131).
-# We treat higher = more severe/important for our similarity calculation.
+# Treat higher = more severe/important for similarity calculation.
 weight_lookup = dict(zip(sw["Symptom"], sw["Weight"]))
 print(f"\nSymptom weight lookup built: {len(weight_lookup)} symptoms")
 print("Sample:", dict(list(weight_lookup.items())[:5]))

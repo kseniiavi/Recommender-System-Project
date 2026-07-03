@@ -17,7 +17,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
-# ── Load preprocessed data ───────────────────────────────────────────────────
+#  Load preprocessed data 
 disease_profiles = pd.read_csv("disease_profiles.csv", index_col="Disease")
 specialty_map    = pd.read_csv("specialty_map_clean.csv")
 weight_lookup    = {}
@@ -35,7 +35,7 @@ spec_dict = dict(zip(
     specialty_map["Specialty"].str.strip()
 ))
 
-# ── Core recommendation function ──────────────────────────────────────────────
+#  Core recommendation function 
 def recommend(user_symptoms: list[str], top_n: int = 3) -> list[dict]:
     """
     Given a list of symptom strings, return the top_n most likely diseases
@@ -50,7 +50,7 @@ def recommend(user_symptoms: list[str], top_n: int = 3) -> list[dict]:
     -------
     List of dicts: [{"rank", "disease", "similarity", "specialty", "confidence"}]
     """
-    # ── Step A: Build the query vector ────────────────────────────────────────
+    #  Step 1: Build the query vector 
     # Same 131-dimensional space as the disease profiles.
     # Each dimension = the symptom's weight if the user has it, else 0.
     query_vector = np.zeros(len(all_symptoms))
@@ -70,7 +70,7 @@ def recommend(user_symptoms: list[str], top_n: int = 3) -> list[dict]:
     if query_vector.sum() == 0:
         return [{"error": "No valid symptoms provided. Check spelling."}]
 
-    # ── Step B: Compute cosine similarity with every disease ──────────────────
+    #  Step 2: Compute cosine similarity with every disease 
     # disease_profiles is shape (41, 131) — one row per disease
     # query_vector reshaped to (1, 131) to match sklearn's expected input
     disease_matrix = disease_profiles.values               # shape (41, 131)
@@ -79,7 +79,7 @@ def recommend(user_symptoms: list[str], top_n: int = 3) -> list[dict]:
     similarities = cosine_similarity(query_matrix, disease_matrix)[0]  # shape (41,)
     # similarities[i] is the cosine similarity between the query and disease i
 
-    # ── Step C: Rank and return top results ───────────────────────────────────
+    #  Step 3: Rank and return top results 
     ranked_indices = np.argsort(similarities)[::-1][:top_n]   # descending
 
     results = []
@@ -98,7 +98,7 @@ def recommend(user_symptoms: list[str], top_n: int = 3) -> list[dict]:
     return results
 
 
-# ── Helper: pretty-print results ─────────────────────────────────────────────
+#  Helper: pretty-print results 
 def print_results(symptoms: list[str], results: list[dict]):
     print("\n" + "─" * 55)
     print(f"  Symptoms entered: {', '.join(symptoms)}")
@@ -113,7 +113,7 @@ def print_results(symptoms: list[str], results: list[dict]):
     print("─" * 55)
 
 
-# ── Test cases ───────────────────────────────────────────────────────────────
+#  Test cases 
 if __name__ == "__main__":
 
     print("\n" + "=" * 55)

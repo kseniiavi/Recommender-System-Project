@@ -1,6 +1,4 @@
 """
-synonyms.py
-───────────
 Maps everyday words / common misspellings / alternate phrasings
 to the exact symptom names used in the dataset.
 

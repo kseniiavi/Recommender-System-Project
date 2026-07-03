@@ -1,6 +1,6 @@
 """
-app.py  —  Doctor Specialty Recommender  (final interactive version)
-─────────────────────────────────────────────────────────────────────
+Doctor Specialty Recommender  
+
 Features:
   • Live autocomplete as you type each symptom (prompt_toolkit)
   • Comma-separated input — no underscores needed
@@ -18,7 +18,7 @@ from prompt_toolkit.styles import Style
 from resolver import resolve_all, get_all_completion_candidates
 from step4_recommender import recommend
 
-# ── Custom completer ──────────────────────────────────────────────────────────
+# Custom completer for prompt_toolkit that provides live autocomplete suggestions for symptoms.
 # Works on the CURRENT word being typed (after the last comma).
 # Matches anywhere in the word, not just from the start.
 
@@ -27,7 +27,7 @@ class SymptomCompleter(Completer):
         self.candidates = candidates
 
     def get_completions(self, document, complete_event):
-        # Only autocomplete the word after the last comma
+        # Only autocomplete the word after the comma, spaces, or newline. If the user is typing a new symptom after a comma, we want to suggest completions for that symptom only.
         text = document.text_before_cursor
         if "," or " " or "\n" or "\t" in text:
             current_word = text.split(",")[-1].lstrip()
@@ -49,7 +49,7 @@ class SymptomCompleter(Completer):
                 )
 
 
-# ── Pretty printers ───────────────────────────────────────────────────────────
+#  Pretty printers 
 METHOD_LABEL = {
     "exact":   "✓ exact",
     "synonym": "✓ synonym",
@@ -87,12 +87,12 @@ def print_results(results: list[dict]):
         print(f"       → See a  {r['specialty']}")
         print()
     print(DIVIDER)
-    print("  ⚠  This tool is for educational purposes only.")
+    print("     This tool is for educational purposes only.")
     print("     Always consult a qualified medical professional.")
     print(DIVIDER)
 
 
-# ── Main loop ─────────────────────────────────────────────────────────────────
+#  Main loop 
 def run():
     candidates  = get_all_completion_candidates()
     completer   = SymptomCompleter(candidates)
@@ -131,7 +131,7 @@ def run():
             print("\n  Goodbye.")
             sys.exit(0)
 
-        # ── Commands ──────────────────────────────────────────────────────────
+        #  Commands 
         if raw_input.lower() == "quit" or raw_input.lower() == "exit" or raw_input.lower() == "\x1a":
             print("\n  Goodbye.")
             break
@@ -159,7 +159,7 @@ def run():
             print()
             continue
 
-        # ── Parse and resolve ─────────────────────────────────────────────────
+        #  Parse and resolve 
         raw_symptoms = [s.strip() for s in raw_input.split(",") if s.strip()]
         result       = resolve_all(raw_symptoms)
 
@@ -169,11 +169,11 @@ def run():
 
         print_resolution_summary(resolved, failed, suggestions)
 
-        # ── Minimum symptom gate ──────────────────────────────────────────────
+        #  Minimum symptom gate 
         if len(resolved) < 3:
             needed = 3 - len(resolved)
             print()
-            print(f"  ⚠  Only {len(resolved)} symptom(s) recognised.")
+            print(f"     Only {len(resolved)} symptom(s) recognised.")
             print(f"     Please add at least {needed} more for a reliable result.")
             print(f"     More symptoms = better suggestions.")
             print()
@@ -189,12 +189,12 @@ def run():
             print()
             continue
 
-        # ── Run recommender ───────────────────────────────────────────────────
+        #  Run recommender 
         symptom_names = [s for _, s, _ in resolved]
         recommendations = recommend(symptom_names, top_n=3)
         print_results(recommendations)
 
-        # ── Ask to continue ───────────────────────────────────────────────────
+        #  Ask to continue 
         print()
         try:
             again = prompt("  Try again? (y/n) ▶  ").strip().lower()

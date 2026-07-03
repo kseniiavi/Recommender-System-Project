@@ -138,7 +138,7 @@ if st.session_state.page == "search":
 
     st.markdown('<div class="input-card">', unsafe_allow_html=True)
 
-    # Multi-select input panel. Streamlit handles immediate continuous selection natively.
+    # Multi-select input panel.
     # Pressing Enter on a typed term automatically locks it into the value list.
     selected_symptoms = st.multiselect(
         label="Search and select symptoms",

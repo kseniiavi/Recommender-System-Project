@@ -1,6 +1,4 @@
 """
-resolver.py
-───────────
 Turns whatever a user types into a valid dataset symptom name.
 
 Resolution pipeline (in order):
@@ -14,7 +12,7 @@ Resolution pipeline (in order):
 from rapidfuzz import process, fuzz
 from synonyms import SYNONYMS
 
-# ── Load valid symptom names once at import time ──────────────────────────────
+#  Load valid symptom names once at import time 
 # (This module is imported by the interactive app and the recommender)
 import pandas as pd
 import os
@@ -54,21 +52,21 @@ def resolve_symptom(raw: str) -> tuple[str | None, str]:
     if not raw or not raw.strip():
         return None, "failed"
 
-    # ── Step 1: normalise ─────────────────────────────────────────────────────
+    #  Step 1: normalise 
     normalised = _normalise(raw)
 
-    # ── Step 2: exact match ───────────────────────────────────────────────────
+    #  Step 2: exact match 
     if normalised in _LOWER_MAP:
         return _LOWER_MAP[normalised], "exact"
 
-    # ── Step 3: synonym dictionary (using original spaced version too) ────────
+    #  Step 3: synonym dictionary (using original spaced version too) 
     spaced = raw.strip().lower()            # keep spaces for synonym lookup
     if spaced in SYNONYMS:
         return SYNONYMS[spaced], "synonym"
     if normalised.replace("_", " ") in SYNONYMS:
         return SYNONYMS[normalised.replace("_", " ")], "synonym"
 
-    # ── Step 4: fuzzy matching ────────────────────────────────────────────────
+    #  Step 4: fuzzy matching 
     # rapidfuzz returns (best_match, score, index)
     # We use token_set_ratio which handles word-order differences well
     result = process.extractOne(
@@ -80,7 +78,7 @@ def resolve_symptom(raw: str) -> tuple[str | None, str]:
         matched_lower = result[0]
         return _LOWER_MAP[matched_lower], "fuzzy"
 
-    # ── Step 5: failed ────────────────────────────────────────────────────────
+    #  Step 5: failed 
     return None, "failed"
 
 
